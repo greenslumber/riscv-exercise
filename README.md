@@ -27,24 +27,50 @@ We will use a (slightly modified) exercise from https://github.com/CTSRD-CHERI/c
  
  * Compile `buffer-overflow.c` to a RISC-V binary `buffer-overflow-hybrid` in hybrid capability mode (`riscv64-hybrid`). You can use the `ccc` script from `task/tools` (see the exercise docs for details) for that. What is the full commandline for compilation? 
  
- ```
- INSERT SOLUTION HERE
- ```
- 
- * There is a security flaw in `buffer-overflow.c`. Briefly explain what the flaw is: 
- 
- ```
- INSERT SOLUTION HERE
- ```
- 
- * Start CHERI-RISC-V in QEMU, copy `buffer-overflow-hybrid` to the QEMU guest, and run it with a commandline argument that triggers the mentioned security flaw to overwrite the variable `c` with an attacker-controlled value. Give all the commands you have to run (assuming CHERI is in `~/cheri` and cheribuild in `~/cheribuild`):
- 
-  ```
-  INSERT SOLUTION HERE
-  ```
-  
- * Now, compile the same program in pure capability mode (`riscv64-purecap`) to `buffer-overflow-purecap`. What happens when you run this program in QEMU with the same input that triggered the flaw in `buffer-overflow-hybrid`? Explain why this happens!
+--- 
 
+We can invoke the the `ccc` script with the below command:  
+ ```bash
+ sh ~/cheri/riscv-exercise/task/tools/ccc riscv64-hybrid ~/cheri/riscv-exercise/task/buffer-overflow.c -o buffer-overflow-hybrid
  ```
- INSERT SOLUTION HERE
- ```
+
+The full commandline for actual compilation is: 
+```bash
+/home/osboxes/cheri/output/sdk/bin/clang -target riscv64-unknown-freebsd -march=rv64gcxcheri -mabi=lp64d -mno-relax --sysroot=/home/osboxes/cheri/output/sdk/sysroot-riscv64-hybrid/ -g -O2 -fuse-ld=lld -Wall -Wcheri buffer-overflow.c -o buffer-overflow-hybrid
+```
+
+If we take the recommended route of using aliases:
+
+```bash
+SYSROOT=~/cheri/output/sdk/sysroot-riscv64-hybrid/; export SYSROOT
+CLANG=~/cheri/output/sdk/bin/clang; export CLANG
+```
+
+We could manually compile the code without using `ccc` as so: 
+
+```bash
+$CLANG -g -O2 -target riscv64-unknown-freebsd --sysroot="$SYSROOT" -fuse-ld=lld -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -Wall -Wcheri buffer-overflow.c -o buffer-overflow-hybrid
+```
+
+*N.b. what is the importance between the ccc scipt using `-mabi=lp64d` vs the recommended CheriABI flag of `-mabi=l64pc128d` ?  
+It seems the `lp64d` is specifically for conventional RISC-V, I assume this to allow for hybrid capability rather than purecap.*
+
+---
+
+* There is a security flaw in `buffer-overflow.c`. Briefly explain what the flaw is: 
+
+```
+INSERT SOLUTION HERE
+```
+
+* Start CHERI-RISC-V in QEMU, copy `buffer-overflow-hybrid` to the QEMU guest, and run it with a commandline argument that triggers the mentioned security flaw to overwrite the variable `c` with an attacker-controlled value. Give all the commands you have to run (assuming CHERI is in `~/cheri` and cheribuild in `~/cheribuild`):
+
+```
+INSERT SOLUTION HERE
+```
+
+* Now, compile the same program in pure capability mode (`riscv64-purecap`) to `buffer-overflow-purecap`. What happens when you run this program in QEMU with the same input that triggered the flaw in `buffer-overflow-hybrid`? Explain why this happens!
+
+```
+INSERT SOLUTION HERE
+```
