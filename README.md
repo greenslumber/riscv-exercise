@@ -121,10 +121,10 @@ In-address space security exception (core dumped)
 
 Using the diagnostic message tool `dmesg` provides us with the following messages:  
 
-`
+```bash
 pid 751 (buffer-overflow-pur), jid 0, uid 0: exited on signal 34
-  
-pid 753 (buffer-overflow-pur), jid 0, uid 0: exited on signal 34`
+pid 753 (buffer-overflow-pur), jid 0, uid 0: exited on signal 34
+```
 
 From the host, we are able to determine that to which this signal refers with the following command:  
 
